@@ -16,6 +16,7 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import os
+import sys
 import emoji
 
 
@@ -36,7 +37,12 @@ def check_path(path=None):
         return True
     else:
         return os.path.exists(path)
-
+    
+def resource_path(relative_path):
+    """ Retorna o caminho absoluto para recursos do PyInstaller """
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 if __name__ == '__main__':
     pass

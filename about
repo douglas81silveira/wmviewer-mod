@@ -1,13 +1,29 @@
-[b]Whatsapp Msgstore Viewer[/b] (WMV)
-Version $$version$$
-(C) 2023 [ref=https://github.com/absadiki][color=0000ff]absadiki[/color][/ref]
+[b]Whatsapp Msgstore Viewer[/b] (WMViewer)
+Versão Modificada
+Baseado no WMV $$version$$
 [color=ffffff]\n[/color]
 
-WMV is a free, open source and cross-platform app to decrypt, read and view the Whatsapp [i]msgstore.db[/i] database.
-It is licenced under the GNU General Licence version 3 or later. You can modify or redistribute it under the conditions
-of these licences. (See the licence tab for more information)
+(C) 2023 [ref=https://github.com/absadiki][color=0000ff]absadiki[/color][/ref]  
+Modificado e empacotado por 
+[ref=https://github.com/douglas81silveira][color=0000ff]Douglas Silveira[/color][/ref]
 [color=ffffff]\n[/color]
 
+O WMViewer é uma versão modificada do projeto original
+**Whatsapp Msgstore Viewer (WMV)**, um aplicativo gratuito,
+de código aberto e multiplataforma, desenvolvido para descriptografar,
+ler e visualizar bancos de dados do WhatsApp
+[i]msgstore.db[/i].
+[color=ffffff]\n[/color]
 
-Visit the [ref=$$g_page$$][color=0000ff]Github[/color][/ref] page for more information.
+O projeto original é licenciado sob a
+**GNU General Public License versão 3 ou posterior**.
+Esta versão modificada segue os mesmos termos de licenciamento.
+(Consulte a aba de licença para mais informações)
+[color=ffffff]\n[/color]
 
+Projeto original:
+[ref=https://github.com/absadiki][color=0000ff]https://github.com/absadiki[/color][/ref]
+[color=ffffff]\n[/color]
+
+Projeto modificado (WMViewer):
+[ref=https://github.com/douglas81silveira/wmviewer-mod][color=0000ff]https://github.com/douglas81silveira/wmviewer-mod[/color][/ref]

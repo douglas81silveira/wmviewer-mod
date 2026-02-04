@@ -16,7 +16,7 @@
             adaptive_height: True
             halign: "center"
         MDRectangleFlatIconButton:
-            text: "Check the source code on Github"
+            text: "Ver código-fonte no GitHub"
             icon: "github"
             pos_hint: {"center_x": .5, "center_y": .5}
             size_hint: None, None
@@ -38,26 +38,26 @@
                     spacing: "20dp"
                     TextFieldFileManager:
                         id: msgstore_file_path
-                        hint_text: "msgstore.db file path"
+                        hint_text: "Caminho do arquivo msgstore.db"
                         pos_hint: {"center_x": .5, "center_y": .5}
                     TextFieldFileManager:
                         id: wa_file_path
-                        hint_text: "wa.db file path (Optional)"
+                        hint_text: "Caminho do arquivo wa.db (Opcional)"
                         pos_hint: {"center_x": .5, "center_y": .5}
-                        helper_text: "To view contact names instead of just their numbers"
+                        helper_text: "Permite exibir nomes dos contatos em vez de apenas números"
                     TextFieldFileManager:
                         id: wp_dir
-                        hint_text: "`Whatsapp` Directory (Optional)"
+                        hint_text: "Diretório do WhatsApp (Opcional)"
                         pos_hint: {"center_x": .5, "center_y": .5}
-                        helper_text: "In case you want to view the media in the chat (audios, videos, images ...), leave it blank otherwise"
+                        helper_text: "Use para visualizar mídias no chat (áudios, vídeos, imagens). Deixe em branco caso contrário"
                     MDTextField:
                         id: db_version
                         pos_hint: {'center_x': .5, 'center_y': .5}
                         text: app.db_version
-                        hint_text: "Database version"
+                        hint_text: "Versão do banco de dados"
                         readonly: True
                         on_focus: if self.focus: root.menu.open()
-                        helper_text: 'Check the github page for more details'
+                        helper_text: "Consulte a página do GitHub para mais detalhes"
                     MDBoxLayout:
                         id: key_file_container
                         orientation: 'horizontal'
@@ -69,29 +69,25 @@
                             on_active: root.on_enc_checkbox(self.active)
                         MDLabel:
                             markup: True
-                            text: "Encrypted database"
+                            text: "Banco de dados criptografado"
                             font_style: "Body2"
                             valign: "center"
                             theme_text_color: 'Secondary'
                     MDRoundFlatButton:
-                        text: "Advanced settings"
+                        text: "Configurações avançadas"
                         on_release: root.open_settings()
 
     MDFillRoundFlatButton:
-        text: "LOGIN" if not enc_checkbox.active else 'DECRYPT & LOGIN'
+        text: "ENTRAR" if not enc_checkbox.active else "DESCRIPTOGRAFAR E ENTRAR"
         on_release: root.controller.on_tap_button_login()
         pos_hint: {"center_x": .5, "center_y": .1}
 
     Attachment:
-        # not an attachment but same ui attributes
         markup: True
-        text: "[ref=about]About[/ref]"
+        text: "[ref=about]Sobre[/ref]"
         adaptive_height: True
         halign: "center"
         theme_text_color: 'Secondary'
         padding_y: dp(10)
         pos_hint: {"center_x": .5, "center_y": 0.025}
         on_ref_press: root.open_about()
-
-
-

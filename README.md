@@ -1,82 +1,135 @@
-# whatsapp Msgstore Viewer
-Free, open source and cross-platform app to decrypt, read and view the Whatsapp `msgstore.db` database.
-<br/>
-<p align="center">
-  <img src="./assets/demo/demo_gif_2.gif">
-</p>
+# WMViewer – WhatsApp MsgStore Viewer (Modified Version)
 
-# Features
-* View contact and group chats.
-* View call logs with their durations.
-* Easy access to media files (images, audio, and video) from within the chat, if the local WhatsApp directory has been provided.
-* Decrypt and view the database if you have the decryption `key` (Should support **crypt12**, **crypt14**, and **crypt15**).
-* Cross-platform (Should work on Linux, Windows, and Mac)
+WMViewer is a modified version of the **WhatsApp MsgStore Viewer** project, adapted to meet specific workflow and deployment needs.
 
+This version focuses on:
+- Distribution as a **single executable**
+- Persistent local user data
+- Improved file selection experience
 
-# Installation
-### Prerequisites
-- Python 3.9 or later
+---
+
+## 🚀 Features
+
+- 📦 **Single-file executable**
+  - Packaged using **PyInstaller** with all required assets embedded.
+- 💾 **Persistent login data**
+  - Automatically creates and reads a `login_data.json` file in the **current directory**.
+- 📂 **Improved file manager behavior**
+  - `TextFieldFileManager` opens:
+    - The **current directory** by default
+    - Or **previously saved directories** from `login_data.json`, if available.
+- 🖥️ **Windowed application**
+  - No console window when running the executable.
+
+---
+
+## 🛠️ Build Command
+
 ```bash
-git clone https://github.com/absadiki/whatsapp-msgstore-viewer
-cd whatsapp-msgstore-viewer
-pip install -e .
+pyinstaller --noconfirm --onefile --windowed \
+  --add-data "dbs;dbs" \
+  --add-data "View;View" \
+  --add-data "assets;assets" \
+  --add-data "about;." \
+  --add-data "LICENSE;." \
+  --add-data "credits;." \
+  --hidden-import "kivymd.uix.toolbar" \
+  --hidden-import "kivymd.uix.filemanager" \
+  --hidden-import "kivymd.uix.selectioncontrol" \
+  --name "WMViewer" \
+  --clean ".\main.py"
 ```
 
-### Run
+---
+
+## 📁 Runtime Files
+
+- **`login_data.json`**
+  - Created automatically in the directory where the executable is run.
+  - Stores login information and previously accessed directories.
+  - Reused on subsequent executions to improve usability.
+
+---
+
+## 📌 Notes
+
+- This project is a **modified version**, not the original WhatsApp MsgStore Viewer.
+- The original project credits and license are preserved.
+- Designed for environments where portability and ease of deployment are required.
+
+---
+
+## 📄 License & Credits
+
+Refer to the included `LICENSE` and `credits` files for original authorship and licensing information.
+
+---
+
+---
+
+# WMViewer – WhatsApp MsgStore Viewer (Versão Modificada)
+
+O **WMViewer** é uma versão modificada do projeto **WhatsApp MsgStore Viewer**, adaptada para atender demandas específicas de uso e distribuição.
+
+Esta versão tem foco em:
+- Distribuição como **executável único**
+- Persistência de dados locais do usuário
+- Melhor experiência na seleção de arquivos
+
+---
+
+## 🚀 Funcionalidades
+
+- 📦 **Executável em arquivo único**
+  - Empacotado com **PyInstaller**, incluindo todos os recursos necessários.
+- 💾 **Dados de login persistentes**
+  - Cria e lê automaticamente o arquivo `login_data.json` no **diretório atual**.
+- 📂 **Comportamento aprimorado do gerenciador de arquivos**
+  - O `TextFieldFileManager` abre:
+    - O **diretório atual** por padrão
+    - Ou **diretórios previamente salvos** no `login_data.json`, se existir.
+- 🖥️ **Aplicação em modo janela**
+  - Não abre console ao executar o programa.
+
+---
+
+## 🛠️ Comando de Build
+
 ```bash
-wmv
+pyinstaller --noconfirm --onefile --windowed \
+  --add-data "dbs;dbs" \
+  --add-data "View;View" \
+  --add-data "assets;assets" \
+  --add-data "about;." \
+  --add-data "LICENSE;." \
+  --add-data "credits;." \
+  --hidden-import "kivymd.uix.toolbar" \
+  --hidden-import "kivymd.uix.filemanager" \
+  --hidden-import "kivymd.uix.selectioncontrol" \
+  --name "WMViewer" \
+  --clean ".\main.py"
 ```
 
-> **Note for Ubuntu users:** Additional system dependencies might be needed. See [#19](https://github.com/absadiki/whatsapp-msgstore-viewer/issues/19) for details.
+---
 
-# Usage
-To use the app, you will need:
-* The `msgstore.db` (`msgstore.db.cryptX` if it is encrypted) database: It is a database where Whatsapp is storing all your messages.
-* The `wa.db` database: It is a database where Whatsapp is storing contact names. It is optional, so if it is not provided you will just see phone numbers.
-* The `WhatsApp directory`: The directory of WhatsApp in the local storage of your phone. This will be used to view the media files (Optional as well).
-* The `key`: If your database is encrypted, you will need to provide the decryption key to decrypt it. The decrypted database will be stored in the same directory as your encrypted database with a `-decrypted.db` suffix.
-  (See below for more information).
+## 📁 Arquivos em Tempo de Execução
 
-# Notes
-#### Where to find the databases
-Check out the great tutorial "[Retrieving WhatsApp Databases](https://github.com/Dexter2389/whatsapp-backup-chat-viewer#retrieving-whatsapp-databases)" by [@Dexter2389](https://github.com/Dexter2389).
+- **`login_data.json`**
+  - Criado automaticamente no diretório onde o executável é executado.
+  - Armazena informações de login e diretórios acessados anteriormente.
+  - Reutilizado nas próximas execuções para melhorar a usabilidade.
 
-#### About the decryption process
-The app uses the [WhatsApp-Crypt14-Crypt15-Decrypter](https://github.com/ElDavoo/WhatsApp-Crypt14-Crypt15-Decrypter) by [ElDavoo](https://github.com/ElDavoo) under the hood.
-Please check their repository if you face any issues with the decryption.
+---
 
-#### About the Database schema
-This app is a reverse engineering attempt of the WhatsApp database and has been tested with my personal `msgstore.db` file. It might break if there are any updates to the `msgstore` database schema.
+## 📌 Observações
 
-I've made it easy to add support for more schemas (It's a simple SQLite exercise :D).
+- Este projeto é uma **versão modificada**, não o projeto original.
+- Os créditos e a licença do projeto original foram mantidos.
+- Desenvolvido para cenários que exigem portabilidade e facilidade de implantação.
 
-All contributions are welcome.
+---
 
-Follow these steps to add support for other schemas (see `db/v1/db.py` as an example):
-* Create a package in the `dbs` package and give your schema a name (for example `v2`).
-* Inside the newly created package, create a Python module `db.py`.
-* Inherit the abstract class `AbstractDatabase` located in the `dbs/abstract_db.py` module.
-* The app will dynamically load existing schemas when starting.
-* Submit a pull request.
+## 📄 Licença e Créditos
 
-#### About different languages
-
-  - You might encounter an issue where messages are displayed incorrectly (as square characters).
-  This is likely a font issue. To resolve this, find a font that supports your language and specify its path in the `advanced settings` on the login screen.
-  - For RTL languages, please see [RTL Support #8](https://github.com/absadiki/whatsapp-msgstore-viewer/discussions/8)
-
-# Contributing
-If you find a bug, have a suggestion or feedback, please open an issue for discussion.
-
-
-# License
-
-This project is licensed under the GNU General Public License version 3 or later. You can modify or redistribute it under the conditions
-of these licenses (See [LICENSE](./LICENSE) for more information).
-
-# DISCLAIMER
-This project is not endorsed or certified by WhatsApp Inc. and is meant for **personal and educational purposes only**.
-
-It is provided 'as is' without any express or implied warranties.
-
-The authors, maintainers, and contributors assume no responsibility for errors, omissions, or damages resulting from the use of this information.
+Consulte os arquivos `LICENSE` e `credits` incluídos no projeto para informações sobre autoria e licenciamento original.

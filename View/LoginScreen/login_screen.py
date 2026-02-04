@@ -20,9 +20,10 @@ from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.spinner import MDSpinner
-from Utility.Utils import check_path
+from Utility.Utils import check_path, resource_path
 from View.base_screen import BaseScreenView
 import json
+import sys
 
 
 class TextFieldFileManager(MDRelativeLayout):
@@ -38,7 +39,23 @@ class TextFieldFileManager(MDRelativeLayout):
         )
 
     def file_manager_open(self):
-        self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
+        if getattr(sys, 'frozen', False):
+            default_path = os.path.dirname(sys.executable)
+        else:
+            default_path = os.path.abspath(os.getcwd())
+
+        current_path = self.text.strip()
+        
+        if current_path and os.path.exists(current_path):
+            path_to_open = current_path if os.path.isdir(current_path) else os.path.dirname(current_path)
+        else:
+            path_to_open = default_path
+
+        try:
+            self.file_manager.show(path_to_open)
+        except Exception:
+            self.file_manager.show(os.path.expanduser("~"))
+            
         self.manager_open = True
 
     def select_path(self, path: str):
@@ -62,7 +79,23 @@ class TextFieldFileManager(MDRelativeLayout):
         return True
 
     def open_file_manager(self, hint_text):
-        self.file_manager.show(os.path.expanduser("~"))  # output manager to the screen
+        if getattr(sys, 'frozen', False):
+            default_path = os.path.dirname(sys.executable)
+        else:
+            default_path = os.path.abspath(os.getcwd())
+
+        current_path = self.text.strip()
+        
+        if current_path and os.path.exists(current_path):
+            path_to_open = current_path if os.path.isdir(current_path) else os.path.dirname(current_path)
+        else:
+            path_to_open = default_path
+
+        try:
+            self.file_manager.show(path_to_open)
+        except Exception:
+            self.file_manager.show(os.path.expanduser("~"))
+            
         self.manager_open = True
 
 
@@ -77,13 +110,13 @@ class About(BoxLayout):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        with open('about', 'r') as file:
+        with open(resource_path('about'), 'r', encoding='utf-8') as file:
             content = file.read()
             self.about = content.replace('$$version$$', MDApp.get_running_app().version)\
                 .replace('$$g_page$$', MDApp.get_running_app().g_page)
-        with open('LICENSE', 'r') as file:
+        with open(resource_path('LICENSE'), 'r', encoding='utf-8') as file:
             self.license = file.read()
-        with open('credits', 'r') as file:
+        with open(resource_path('credits'), 'r', encoding='utf-8') as file:
             self.credits = file.read()
 
         self.ids.about_label.bind(on_ref_press=self.open_link)
@@ -145,7 +178,15 @@ class LoginScreenView(BaseScreenView):
                             pos_hint={"center_x": .5, "center_y": .5},
                             helper_text="To decrypt the database")
         
-        self.login_data_file = os.path.join(self.app.user_data_dir, "login_data.json")
+        # self.login_data_file = os.path.join(self.app.user_data_dir, "login_data.json") # original line
+        if getattr(sys, 'frozen', False):
+            # Se for o .exe, pega a pasta do executável
+            base_path = os.path.dirname(sys.executable)
+        else:
+            # Se for rodando via Python puro, pega a pasta do script ou do terminal
+            base_path = os.path.abspath(os.getcwd())
+        self.login_data_file = os.path.join(base_path, "login_data.json") # modified line
+        
 
     def set_item(self, text__item):
         self.ids.db_version.text = text__item

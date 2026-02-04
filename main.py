@@ -21,13 +21,14 @@ this program. If not, see <http://www.gnu.org/licenses/>.
 __author__ = "absadiki"
 __copyright__ = "Copyright 2023"
 __license__ = "GPLv3"
+from Utility.Utils import resource_path
 from version import __version__
 __github__ = "https://github.com/absadiki/whatsapp-msgstore-viewer"
 
 import importlib
 import os
 import sys
-
+import pkgutil
 
 # Set KIVY_TEXT to pil to use the PIL text engine
 os.environ['KIVY_TEXT'] = 'pil'
@@ -44,13 +45,15 @@ height = int(resolution[1] * 0.9)
 Config.set("graphics", "height", height)
 Config.set("graphics", "width", '600')
 
-from kivymd.tools.hotreload.app import MDApp
+# from kivymd.tools.hotreload.app import MDApp
+from kivymd.app import MDApp # modified line
+from kivy.lang import Builder   # added line
 from kivymd.uix.screenmanager import MDScreenManager
 import View.screens
 
+
 importlib.reload(View.screens)
 screens = View.screens.screens
-
 
 class whatsappMsgstoreViewer(MDApp):
     KV_DIRS = [os.path.join(os.getcwd(), "View")]
@@ -82,9 +85,9 @@ class whatsappMsgstoreViewer(MDApp):
         self.db_versions = []
         # pkgutil has issues when packaging the app
 
-        # for _, name, _ in pkgutil.iter_modules(['./dbs']):
-        #     if name != 'abstract_db':
-        #         self.db_versions.append(name)
+        for _, name, _ in pkgutil.iter_modules(['./dbs']):
+            if name != 'abstract_db':
+                self.db_versions.append(name)
 
         # fix dynamically loading when packaging the app
 
@@ -115,7 +118,20 @@ class whatsappMsgstoreViewer(MDApp):
             view.name = name_screen
             self.screens_manager.add_widget(view)
 
-    def build_app(self) -> MDScreenManager:
+    def build(self) -> MDScreenManager:
+        # 1. LOG DE DEPURAÇÃO (Ajuda a ver se os caminhos estão certos no .exe)
+        view_path = resource_path("View")
+        print(f"Carregando KVs de: {view_path}")
+
+        # 2. CARREGAMENTO MANUAL RECURSIVO (Simulando o HotReload)
+        # É vital que isso aconteça ANTES de acessar 'screens'
+        for root, dirs, files in os.walk(view_path):
+            for file in files:
+                if file.endswith(".kv"):
+                    kv_file = os.path.join(root, file)
+                    print(f"Lendo: {kv_file}")
+                    Builder.load_file(kv_file)
+
         self.icon = 'assets/images/logo.png'
         self.title = 'Whatsapp Msgstore Viewer'
 
