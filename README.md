@@ -27,18 +27,7 @@ This version focuses on:
 ## 🛠️ Build Command
 
 ```bash
-pyinstaller --noconfirm --onefile --windowed \
-  --add-data "dbs;dbs" \
-  --add-data "View;View" \
-  --add-data "assets;assets" \
-  --add-data "about;." \
-  --add-data "LICENSE;." \
-  --add-data "credits;." \
-  --hidden-import "kivymd.uix.toolbar" \
-  --hidden-import "kivymd.uix.filemanager" \
-  --hidden-import "kivymd.uix.selectioncontrol" \
-  --name "WMViewer" \
-  --clean ".\main.py"
+pyinstaller --noconfirm --onefile --windowed --add-data "dbs;dbs" --add-data "View;View" --add-data "assets;assets" --add-data "about;." --add-data "LICENSE;." --add-data "credits;." --hidden-import "kivymd.uix.toolbar" --hidden-import "kivymd.uix.filemanager" --hidden-import "kivymd.uix.selectioncontrol" --name "WMViewer" --clean  "C:\Users\intel\whatsapp-msgstore-viewer\main.py"
 ```
 
 ---
@@ -97,18 +86,7 @@ Esta versão tem foco em:
 ## 🛠️ Comando de Build
 
 ```bash
-pyinstaller --noconfirm --onefile --windowed \
-  --add-data "dbs;dbs" \
-  --add-data "View;View" \
-  --add-data "assets;assets" \
-  --add-data "about;." \
-  --add-data "LICENSE;." \
-  --add-data "credits;." \
-  --hidden-import "kivymd.uix.toolbar" \
-  --hidden-import "kivymd.uix.filemanager" \
-  --hidden-import "kivymd.uix.selectioncontrol" \
-  --name "WMViewer" \
-  --clean ".\main.py"
+pyinstaller --noconfirm --onefile --windowed --add-data "dbs;dbs" --add-data "View;View" --add-data "assets;assets" --add-data "about;." --add-data "LICENSE;." --add-data "credits;." --hidden-import "kivymd.uix.toolbar" --hidden-import "kivymd.uix.filemanager" --hidden-import "kivymd.uix.selectioncontrol" --name "WMViewer" --clean  "C:\Users\intel\whatsapp-msgstore-viewer\main.py"
 ```
 
 ---
