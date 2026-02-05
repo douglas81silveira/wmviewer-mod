@@ -130,3 +130,10 @@ dmypy.json
 
 .idea
 dbs/test/
+
+wa.db
+msgstore.db
+wa.db-shm
+wa.db-wal
+msgstore.db-shm
+msgstore.db-wal

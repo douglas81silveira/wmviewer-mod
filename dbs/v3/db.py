@@ -91,6 +91,26 @@ class Database(AbstractDatabase):
         ORDER BY timestamp DESC
         """
         return self.msgstore_cursor.execute(sql_query).fetchall()
+    
+    def fetch_contact_chats_mapped(self):
+        sql_query = """
+        SELECT 
+            chat._id, 
+            -- Prioriza o número de telefone real, se não houver (ex: contato novo/LID puro), usa o original
+            IFNULL(j_real.user, j_original.user) AS user,
+            -- Retorna o JID real para que o Python consiga dar match no wa.db
+            IFNULL(j_real.raw_string, j_original.raw_string) AS raw_string_jid,
+            message.text_data, 
+            DATETIME(ROUND(chat.sort_timestamp / 1000), 'unixepoch') AS timestamp
+        FROM chat 
+        INNER JOIN jid j_original ON chat.jid_row_id = j_original._id
+        LEFT JOIN jid_map ON j_original._id = jid_map.lid_row_id
+        LEFT JOIN jid j_real ON jid_map.jid_row_id = j_real._id
+        INNER JOIN message ON chat.last_message_row_id = message._id
+        WHERE j_original.raw_string NOT LIKE '%g.us'
+        ORDER BY chat.sort_timestamp DESC
+        """
+        return self.msgstore_cursor.execute(sql_query).fetchall()
 
     def fetch_group_chats(self):
         sql_query = """
