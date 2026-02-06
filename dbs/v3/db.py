@@ -76,6 +76,7 @@ class Database(AbstractDatabase):
 
     # --- fetch_* methods copied from v2 without modification ---
 
+    # original fetch_contact_chats (without mapping LID -> JID real)
     def fetch_contact_chats(self):
         sql_query = """
         SELECT 
@@ -92,6 +93,7 @@ class Database(AbstractDatabase):
         """
         return self.msgstore_cursor.execute(sql_query).fetchall()
     
+    # modified fetch_contact_chats with mapping LID -> JID real
     def fetch_contact_chats_mapped(self):
         sql_query = """
         SELECT 
@@ -128,6 +130,7 @@ class Database(AbstractDatabase):
         """
         return self.msgstore_cursor.execute(sql_query).fetchall()
 
+    # original fetch_calls (without mapping LID -> JID real)
     def fetch_calls(self, how_many=None):
         sql_query = """
         SELECT 
@@ -140,6 +143,32 @@ class Database(AbstractDatabase):
             jid.raw_string AS raw_string_jid
         FROM call_log 
         LEFT JOIN jid ON call_log.jid_row_id = jid._id
+        """
+        if how_many:
+            return self.msgstore_cursor.execute(sql_query).fetchmany(how_many)
+        else:
+            return self.msgstore_cursor.execute(sql_query).fetchall()
+    
+    # modified fetch_calls with mapping LID -> JID real
+    def fetch_calls_mapped(self, how_many=None):
+        sql_query = """
+        SELECT 
+            call_log._id, 
+            call_log.from_me, 
+            DATETIME(ROUND(call_log.timestamp / 1000), 'unixepoch') AS timestamp, 
+            call_log.video_call,
+            TIME(call_log.duration, 'unixepoch') AS duration,
+            -- Tenta pegar o número real (j_real), se não houver mapeamento, usa o original (j_orig)
+            IFNULL(j_real.user, j_orig.user) AS user, 
+            -- Retorna o JID real para que o Python faça o match com wa.db
+            IFNULL(j_real.raw_string, j_orig.raw_string) AS raw_string_jid
+        FROM call_log 
+        -- JID original registrado na chamada (pode ser o LID)
+        LEFT JOIN jid j_orig ON call_log.jid_row_id = j_orig._id
+        -- Busca mapeamento LID -> JID Real
+        LEFT JOIN jid_map ON j_orig._id = jid_map.lid_row_id
+        -- Busca os dados do JID Real (Número)
+        LEFT JOIN jid j_real ON jid_map.jid_row_id = j_real._id
         """
         if how_many:
             return self.msgstore_cursor.execute(sql_query).fetchmany(how_many)

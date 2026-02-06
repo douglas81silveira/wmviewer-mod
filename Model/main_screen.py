@@ -61,19 +61,45 @@ class MainScreenModel(BaseScreenModel):
         group_chat_list = self.base.fetch_group_chats()
         return group_chat_list
 
+    # original method
+    # def get_calls(self, how_many=None):
+    #     calls = self.base.fetch_calls(how_many)
+    #     if self.base.contacts is not None:
+    #         # users with their display names
+    #         for call in calls:
+    #             try:
+    #                 call['user'] = self.base.contacts[call['raw_string']]['display_name'] + \
+    #                                        f" <{call['user']}> "
+
+    #             except KeyError:
+    #                 pass  # already mentioned
+
+    #     return calls
+
+    # modified method with schema mapping
     def get_calls(self, how_many=None):
-        calls = self.base.fetch_calls(how_many)
+        # Busca as chamadas usando a nova query mapeada
+        call_list = self.base.fetch_calls_mapped(how_many)
+        
         if self.base.contacts is not None:
-            # users with their display names
-            for call in calls:
-                try:
-                    call['user'] = self.base.contacts[call['raw_string']]['display_name'] + \
-                                           f" <{call['user']}> "
-
-                except KeyError:
-                    pass  # already mentioned
-
-        return calls
+            for call in call_list:
+                raw_jid = call.get('raw_string_jid')
+                
+                # Busca o nome no dicionário carregado do wa.db
+                contact_info = self.base.contacts.get(raw_jid)
+                
+                if contact_info:
+                    display_name = contact_info.get('display_name', '')
+                    if display_name:
+                        # Formato: Nome <Número ou LID>
+                        call['user'] = f"{display_name} <{call['user']}>"
+                    else:
+                        call['user'] = f"{call['user']}"
+                else:
+                    # Contato não está na agenda (número desconhecido)
+                    call['user'] = f"{call['user']}"
+                    
+        return call_list
 
     def get_status(self, jid):
         try:
